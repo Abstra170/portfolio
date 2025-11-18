@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link href="../Assets/css/contact.css" rel="stylesheet" />
+</head>
+<body>
+
+<section class="contact-section">
+  <h2>Contact Me</h2>
+
+  <!-- STATUS MESSAGE -->
+  <p id="form-status" style="text-align:center; margin-bottom: 15px;"></p>
+
+  <!-- CONTACT FORM -->
+  <form id="contact-form">
+    <input type="text" id="name" name="name" placeholder="Your Name" required />
+    <input type="email" id="email" name="email" placeholder="Your Email" required />
+    <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+
+<!-- EmailJS Script -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+<script>
+  console.log("🔥 JS Loaded — Starting Initialization");
+
+  // EMAILJS INIT (V3)
+  try {
+    emailjs.init("-ZPWx8uDavlrul3fe");
+    console.log("✅ EmailJS initialized");
+  } catch (err) {
+    console.error("❌ EmailJS Init Failed:", err);
+  }
+
+  const form = document.getElementById("contact-form");
+  const status = document.getElementById("form-status");
+
+  form.addEventListener("submit", function (event) {
+    console.log("📩 FORM SUBMIT TRIGGERED");
+    event.preventDefault();      
+    event.stopImmediatePropagation();
+    console.log("🛑 Default & bubbling stopped. No page reload will happen.");
+
+    status.textContent = "Sending...";
+    status.style.color = "blue";
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const message = document.getElementById("message").value;
+
+    console.log("🔍 Form Data:", { name, email, message });
+
+    const templateParams = {
+      user_name: name,
+      user_email: email,
+      user_message: message
+    };
+
+    console.log("📤 Sending Email to EmailJS…");
+
+    emailjs
+      .send("service_22t29zc", "template_ch2dguj", templateParams)
+      .then(
+        function (response) {
+          console.log("✅ Email SUCCESS:", response);
+          status.textContent = "Message sent successfully!";
+          status.style.color = "green";
+          form.reset();
+        },
+        function (error) {
+          console.error("❌ Email FAILED:", error);
+          status.textContent = "Failed to send message (check console).";
+          status.style.color = "red";
+        }
+      );
+  });
+</script>
+
+</body>
+</html>
